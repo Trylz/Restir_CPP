@@ -47,7 +47,7 @@ To switch scene simply change the **SCENE_NAME** define  inside RestirApp.cpp fi
 
 # Code overview
 Restir source code is located here  
-https://github.com/Trylz/RestirFalcor/tree/master/Source/Samples/Restir
+https://github.com/Trylz/Restir_CPP/tree/main/Source/Samples/Restir
 
 ## Application entry point
 The application entry point is located in the RestirApp.cpp file
