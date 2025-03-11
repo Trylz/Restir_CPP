@@ -17,7 +17,7 @@ https://research.nvidia.com/sites/default/files/pubs/2020-07_Spatiotemporal-rese
 ## Grab necessary assets
 The dragon buddha model used is huge. Git doesnt allow me to push files that are greater than 100 MB.
 That model need to be installed has explained here:
-https://github.com/Trylz/RestirFalcor/blob/master/TestScenes/DragonBuddha/README.txt  
+https://github.com/Trylz/Restir_CPP/blob/main/TestScenes/DragonBuddha/README.txt
 
 ## Building prerequisites
 - Windows 10 version 20H2 (October 2020 Update) or newer, OS build revision .789 or newer
@@ -47,7 +47,7 @@ To switch scene simply change the **SCENE_NAME** define  inside RestirApp.cpp fi
 
 # Code overview
 Restir source code is located here  
-https://github.com/Trylz/RestirFalcor/tree/master/Source/Samples/Restir
+https://github.com/Trylz/Restir_CPP/tree/main/Source/Samples/Restir
 
 ## Application entry point
 The application entry point is located in the RestirApp.cpp file
