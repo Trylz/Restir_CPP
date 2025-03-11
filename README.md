@@ -1,4 +1,4 @@
-# DirectX 12 Restir implementation using Falcor  
+# Restir implementation using Falcor  
 
 This repository host an implementation of the Restir algorithm inside Nvidia Falcor 8.0.
 ![restir_teaser](https://github.com/user-attachments/assets/e2757806-ed91-4eab-91fd-16b60cdad4f5)
