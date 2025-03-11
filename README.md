@@ -7,7 +7,7 @@ This repository host an implementation of the Restir algorithm inside Nvidia Fal
 
 Video showcase: https://youtu.be/E4Vb9qp4OP4
 
-Source code: https://github.com/Trylz/RestirFalcor/tree/master/Source/Samples/Restir  
+Source code: https://github.com/Trylz/Restir_CPP/tree/main/Source/Samples/Restir
 
 Here the original paper:  
 https://research.nvidia.com/sites/default/files/pubs/2020-07_Spatiotemporal-reservoir-resampling/ReSTIR.pdf
