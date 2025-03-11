@@ -3,7 +3,7 @@
 This repository host a C++ implementation of the Restir algorithm inside Falcor 8.0.
 ![restir_teaser](https://github.com/user-attachments/assets/e2757806-ed91-4eab-91fd-16b60cdad4f5)
 ![Sponza](https://github.com/user-attachments/assets/50a1e7c9-740c-4fc6-beca-661914f04734)
-![Breakfast_Showcase](https://github.com/user-attachments/assets/1acfc3b0-e4fc-427e-8002-0406dbbdbfa6)
+![SanMiguel](https://github.com/user-attachments/assets/5ab85fc4-21f6-44da-8055-89aa15c96030)
 
 Video showcase: https://youtu.be/E4Vb9qp4OP4
 
