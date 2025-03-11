@@ -127,10 +127,10 @@ It is more noticeable when camera is far away from objects.
 ### 3) Temporal acnee  
 a) Dragon buddha scene  
 ![Acnee_Image](https://github.com/user-attachments/assets/a780f519-a4d4-4d55-a3d5-d7881f5f2423)  
-https://github.com/user-attachments/assets/3888a81e-9df1-4b40-9b1a-e8cc7dcd4dfe 
+GIF: https://github.com/user-attachments/assets/3888a81e-9df1-4b40-9b1a-e8cc7dcd4dfe 
 
 b) Acnee with denoising OFF in Sponza scene  
-https://youtu.be/tykjTZ2svXw  
+Video: https://youtu.be/tykjTZ2svXw  
 ![Sponza_Acnee](https://github.com/user-attachments/assets/d65e6419-528f-404f-9d98-11942635c232)  
 
  It happens when moving fast then stoping close to an occluder.  
