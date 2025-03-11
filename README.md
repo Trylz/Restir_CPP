@@ -133,7 +133,7 @@ b) Acnee with denoising OFF in Sponza scene
 Video: https://youtu.be/tykjTZ2svXw  
 ![Sponza_Acnee](https://github.com/user-attachments/assets/d65e6419-528f-404f-9d98-11942635c232)  
 
- It happens when moving fast then stoping close to an occluder.  
+The glitch happens when moving fast then stoping close to an occluder.  
 **This is CAUSED by the temporal filtering (See TemporalFilteringPass.slang).**  
   
 *The following fixes it for the dragon buddha scene WHILE the Sponza scene still exibits it*
