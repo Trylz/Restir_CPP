@@ -128,9 +128,8 @@ a) Dragon buddha scene
 https://github.com/user-attachments/assets/3888a81e-9df1-4b40-9b1a-e8cc7dcd4dfe 
 
 b) Acnee with denoising OFF in Sponza scene  
-![Sponza_Acnee](https://github.com/user-attachments/assets/d65e6419-528f-404f-9d98-11942635c232)  
-
 https://youtu.be/tykjTZ2svXw  
+![Sponza_Acnee](https://github.com/user-attachments/assets/d65e6419-528f-404f-9d98-11942635c232)  
 
  It happens when moving fast then stoping close to an occluder.  
 **This is CAUSED by the temporal filtering (See TemporalFilteringPass.slang).**  
