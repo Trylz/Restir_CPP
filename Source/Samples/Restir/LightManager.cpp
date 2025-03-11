@@ -92,7 +92,7 @@ void LightManager::createArcadeSceneLights(Falcor::ref<Falcor::Scene> pScene)
 
         // Color
         light.mColor =
-            Falcor::float3(rng.generateUnsignedNormalized(), rng.generateUnsignedNormalized(), rng.generateUnsignedNormalized()) * 50.0f /
+            Falcor::float3(rng.generateUnsignedNormalized(), rng.generateUnsignedNormalized(), rng.generateUnsignedNormalized()) * 80.0f /
             (float)nbLights;
 
         // Position
