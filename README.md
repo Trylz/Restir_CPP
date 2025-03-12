@@ -134,7 +134,7 @@ Video: https://youtu.be/tykjTZ2svXw
 ![Sponza_Acnee](https://github.com/user-attachments/assets/d65e6419-528f-404f-9d98-11942635c232)  
 
 The glitch happens when moving fast then stoping close to an occluder.  
-**This is CAUSED by the temporal filtering (See TemporalFilteringPass.slang).**  
+**This is CAUSED by the temporal filtering (See TemporalFilteringPass.slang). Then amplified by the denoiser**  
   
 *The following fixes it for the dragon buddha scene WHILE the Sponza scene still exibits it*
 - Apply a blue noise when shading using a reservoir 
