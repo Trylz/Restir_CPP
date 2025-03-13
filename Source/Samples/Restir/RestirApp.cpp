@@ -200,9 +200,7 @@ void RestirApp::loadScene(const Fbo* pTargetFbo, RenderContext* pRenderContext)
 
 #if USE_DENOISING
 #if DENOISING_NRD
-    mpDenoisingPass = new Restir::NRDDenoiserPass(
-        getDevice(), pRenderContext, mpScene, mpShadingPass->getOuputTexture(), pTargetFbo->getWidth(), pTargetFbo->getHeight()
-    );
+    mpDenoisingPass = new Restir::NRDDenoiserPass(getDevice(), pRenderContext, mpScene, pTargetFbo->getWidth(), pTargetFbo->getHeight());
 #else
     mpDenoisingPass = new Restir::OptixDenoiserPass(
         getDevice(), mpScene, pRenderContext, mpShadingPass->getOuputTexture(), pTargetFbo->getWidth(), pTargetFbo->getHeight()
@@ -235,9 +233,15 @@ void RestirApp::render(RenderContext* pRenderContext, const ref<Fbo>& pTargetFbo
     mpSpatialFilteringPass->render(pRenderContext);
 #endif
 
+#if USE_DENOISING
+#if DENOISING_NRD
+    mpDenoisingPass->render(pRenderContext);
+#endif
+#endif
+
     mpShadingPass->render(pRenderContext, mpCamera);
 
-#if USE_DENOISING
+#if USE_DENOISING && !DENOISING_NRD
     mpDenoisingPass->render(pRenderContext);
     pRenderContext->blit(mpDenoisingPass->getOuputTexture()->getSRV(), pTargetFbo->getRenderTargetView(0));
 #else

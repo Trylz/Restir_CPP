@@ -7,6 +7,7 @@ cbuffer PerFrameCB
     float4x4 viewMat;
     float4x4 previousFrameViewProjMat;
     uint reservoirIdx;
+    uint nbReservoirPerPixel;
 };
 
 RWTexture2D<float4> gOutRadianceHit;

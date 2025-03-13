@@ -2,6 +2,7 @@
 #include "GBuffer.h"
 #include "Core/API/NativeHandleTraits.h"
 #include "ReservoirManager.h"
+#include "SceneSettings.h"
 
 #include <slang-gfx.h>
 #include <d3d12.h>
@@ -368,7 +369,7 @@ void NRDPass::createResources()
 
 void NRDPass::packNRD(Falcor::RenderContext* pRenderContext, uint32_t ReservoirIdx)
 {
-    FALCOR_PROFILE(pRenderContext, "DenoisingPass::packNRD");
+    FALCOR_PROFILE(pRenderContext, "NRDPass::packNRD");
 
     auto var = mpPackNRDPass->getRootVar();
 
@@ -376,6 +377,7 @@ void NRDPass::packNRD(Falcor::RenderContext* pRenderContext, uint32_t ReservoirI
     var["PerFrameCB"]["viewMat"] = transpose(mpScene->getCamera()->getViewMatrix());
     var["PerFrameCB"]["previousFrameViewProjMat"] = transpose(mPreviousFrameViewProjMat);
     var["PerFrameCB"]["reservoirIdx"] = ReservoirIdx;
+    var["PerFrameCB"]["nbReservoirPerPixel"] = SceneSettingsSingleton::instance()->nbReservoirPerPixel;
 
     var["gOutRadianceHit"] = mInputTexture;
     var["gReservoirs"] = ReservoirManagerSingleton::instance()->getCurrentFrameReservoirBuffer();
@@ -394,20 +396,23 @@ void NRDPass::packNRD(Falcor::RenderContext* pRenderContext, uint32_t ReservoirI
 
 void NRDPass::unpackNRD(Falcor::RenderContext* pRenderContext, uint32_t ReservoirIdx)
 {
-    FALCOR_PROFILE(pRenderContext, "DenoisingPass::unpackNRD");
+    FALCOR_PROFILE(pRenderContext, "NRDPass::unpackNRD");
 
     auto var = mpUnpackNRDPass->getRootVar();
 
     var["PerFrameCB"]["viewportDims"] = uint2(mWidth, mHeight);
-    var["gInOutOutput"] = mOuputTexture;
-    var["gPositionWs"] = GBufferSingleton::instance()->getCurrentPositionWsTexture();
+    var["PerFrameCB"]["reservoirIdx"] = ReservoirIdx;
+    var["PerFrameCB"]["nbReservoirPerPixel"] = SceneSettingsSingleton::instance()->nbReservoirPerPixel;
+
+    var["gNRDOutput"] = mOuputTexture;
+    var["gReservoirs"] = ReservoirManagerSingleton::instance()->getCurrentFrameReservoirBuffer();
 
     mpUnpackNRDPass->execute(pRenderContext, mWidth, mHeight);
 }
 
 void NRDPass::render(Falcor::RenderContext* pRenderContext, uint32_t ReservoirIdx)
 {
-    FALCOR_PROFILE(pRenderContext, "DenoisingPass::render");
+    FALCOR_PROFILE(pRenderContext, "NRDPass::render");
 
     packNRD(pRenderContext, ReservoirIdx);
     dipatchNRD(pRenderContext);
@@ -453,7 +458,7 @@ void NRDPass::populateDenoiserSettings(nrd::RelaxDiffuseSettings& settings) {}
 
 void NRDPass::dipatchNRD(Falcor::RenderContext* pRenderContext)
 {
-    FALCOR_PROFILE(pRenderContext, "DenoisingPass::dipatchNRD");
+    FALCOR_PROFILE(pRenderContext, "NRDPass::dipatchNRD");
 
     nrd::CommonSettings commonSettings = {};
     populateCommonSettings(commonSettings);
@@ -524,7 +529,7 @@ void NRDPass::dispatch(RenderContext* pRenderContext, const nrd::DispatchDesc& d
                 texture = mViewZTexture;
                 break;
             case nrd::ResourceType::IN_DIFF_RADIANCE_HITDIST:
-                texture = m_InColorTexture;
+                texture = mInputTexture;
                 break;
             case nrd::ResourceType::OUT_DIFF_RADIANCE_HITDIST:
                 texture = mOuputTexture;
@@ -609,6 +614,28 @@ void NRDPass::dispatch(RenderContext* pRenderContext, const nrd::DispatchDesc& d
     pCommandList->Dispatch(dispatchDesc.gridWidth, dispatchDesc.gridHeight, 1);
 
     mpDevice->getUploadHeap()->release(cbAllocation);
+}
+
+NRDDenoiserPass::NRDDenoiserPass(
+    Falcor::ref<Falcor::Device> pDevice,
+    Falcor::RenderContext* pRenderContext,
+    Falcor::ref<Falcor::Scene> pScene,
+    uint32_t width,
+    uint32_t height
+)
+{
+    mNRDPass = new NRDPass(pDevice, pRenderContext, pScene, width, height);
+}
+
+NRDDenoiserPass::~NRDDenoiserPass()
+{
+    delete mNRDPass;
+}
+
+void NRDDenoiserPass::render(Falcor::RenderContext* pRenderContext)
+{
+    for (uint32_t resIdx = 0u; resIdx < SceneSettingsSingleton::instance()->nbReservoirPerPixel; ++resIdx)
+        mNRDPass->render(pRenderContext, resIdx);
 }
 
 } // namespace Restir

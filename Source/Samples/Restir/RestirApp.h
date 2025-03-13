@@ -13,7 +13,7 @@
 
 using namespace Falcor;
 
-#define DENOISING_NRD 0
+#define DENOISING_NRD 1
 
 class RestirApp : public SampleApp
 {
