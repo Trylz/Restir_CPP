@@ -35,7 +35,7 @@ RWTexture2D<float4> gSpecular;
     TinyUniformSampleGenerator rng = TinyUniformSampleGenerator(pixel, sampleIndex);
 
     const float3 currN = gNormalWs[pixel].xyz;
-    const float3 V = normalize(currP - cameraPositionWs);
+    const float3 V = normalize(cameraPositionWs - currP);
     const float3 diffuse = gAlbedo[pixel].xyz;
     const float3 specular = gSpecular[pixel].xyz;
     const float roughness = gSpecular[pixel].w;

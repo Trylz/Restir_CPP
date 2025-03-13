@@ -57,7 +57,7 @@ void ShadingPass(uint3 threadId: SV_DispatchThreadID)
 
     const float3 P = gPositionWs[pixel].xyz;
     const float3 N = gNormalWs[pixel].xyz;
-    const float3 V = normalize(P - cameraPositionWs);
+    const float3 V = normalize(cameraPositionWs - P);
     const float3 diffuse = gAlbedo[pixel].xyz;
     const float3 specular = gSpecular[pixel].xyz;
     const float roughness = gSpecular[pixel].w;

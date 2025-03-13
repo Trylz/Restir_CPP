@@ -52,7 +52,7 @@ void PackNRD(uint3 threadId: SV_DispatchThreadID)
     }
     else
     {
-        gViewZ[pixel] = 1e8f; // or 0.0?
+        gViewZ[pixel] = 1e8f;
         gMotionVector[pixel] = 0.0f;
     }
 }
