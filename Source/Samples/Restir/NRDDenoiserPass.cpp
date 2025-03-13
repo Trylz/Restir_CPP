@@ -1,6 +1,7 @@
 #include "NRDDenoiserPass.h"
 #include "GBuffer.h"
 #include "Core/API/NativeHandleTraits.h"
+#include "ReservoirManager.h"
 
 #include <slang-gfx.h>
 #include <d3d12.h>
@@ -365,7 +366,7 @@ void NRDPass::createResources()
     }
 }
 
-void NRDPass::packNRD(Falcor::RenderContext* pRenderContext)
+void NRDPass::packNRD(Falcor::RenderContext* pRenderContext, uint32_t ReservoirIdx)
 {
     FALCOR_PROFILE(pRenderContext, "DenoisingPass::packNRD");
 
@@ -374,8 +375,11 @@ void NRDPass::packNRD(Falcor::RenderContext* pRenderContext)
     var["PerFrameCB"]["viewportDims"] = uint2(mWidth, mHeight);
     var["PerFrameCB"]["viewMat"] = transpose(mpScene->getCamera()->getViewMatrix());
     var["PerFrameCB"]["previousFrameViewProjMat"] = transpose(mPreviousFrameViewProjMat);
+    var["PerFrameCB"]["reservoirIdx"] = ReservoirIdx;
 
-    var["gRadianceHit"] = m_InColorTexture;
+    var["gOutRadianceHit"] = mInputTexture;
+    var["gReservoirs"] = ReservoirManagerSingleton::instance()->getCurrentFrameReservoirBuffer();
+
     var["gNormalLinearRoughness"] = mNormalLinearRoughnessTexture;
     var["gViewZ"] = mViewZTexture;
     var["gMotionVector"] = mMotionVectorTexture;
@@ -388,7 +392,7 @@ void NRDPass::packNRD(Falcor::RenderContext* pRenderContext)
     mpPackNRDPass->execute(pRenderContext, mWidth, mHeight);
 }
 
-void NRDPass::unpackNRD(Falcor::RenderContext* pRenderContext)
+void NRDPass::unpackNRD(Falcor::RenderContext* pRenderContext, uint32_t ReservoirIdx)
 {
     FALCOR_PROFILE(pRenderContext, "DenoisingPass::unpackNRD");
 
@@ -401,13 +405,13 @@ void NRDPass::unpackNRD(Falcor::RenderContext* pRenderContext)
     mpUnpackNRDPass->execute(pRenderContext, mWidth, mHeight);
 }
 
-void NRDPass::render(Falcor::RenderContext* pRenderContext)
+void NRDPass::render(Falcor::RenderContext* pRenderContext, uint32_t ReservoirIdx)
 {
     FALCOR_PROFILE(pRenderContext, "DenoisingPass::render");
 
-    packNRD(pRenderContext);
+    packNRD(pRenderContext, ReservoirIdx);
     dipatchNRD(pRenderContext);
-    unpackNRD(pRenderContext);
+    unpackNRD(pRenderContext, ReservoirIdx);
 
     mPreviousFrameViewMat = mpScene->getCamera()->getViewMatrix();
     mPreviousFrameProjMat = mpScene->getCamera()->getProjMatrix();

@@ -27,7 +27,7 @@ public:
     );
     ~NRDPass();
 
-    void render(Falcor::RenderContext* pRenderContext);
+    void render(Falcor::RenderContext* pRenderContext, uint32_t ReservoirIdx);
     inline Falcor::ref<Falcor::Texture>& getOuputTexture() { return mOuputTexture; };
 
 private:
