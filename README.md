@@ -105,7 +105,7 @@ Denoising can be done using NRD or Optix denoiser
 **#define DENOISING_NRD 0**  
 
 Note that NRD is currently performed on the final image(same for Optix).
-It is not recommended when i read the doc. So we may want to denoise the reservoirs instead. This is work in progress see: NRDDenoiserPass_MultipleNrd_WIP.cpp
+It is not recommended when i read the doc. So we may want to denoise the reservoirs instead? This is being investigated here: https://github.com/Trylz/Restir_CPP/tree/NRD-before-shading
 
 # CURRENT ISSUES
 This is work in progress and some artefacts are still visible.
