@@ -1,5 +1,8 @@
 #include "NRDEncoding.slangh"
 #include "NRD.slangh"
+#include "Reservoir.slangh"
+
+import Utils.Sampling.TinyUniformSampleGenerator;
 
 cbuffer PerFrameCB
 {
@@ -22,7 +25,7 @@ RWStructuredBuffer<RestirReservoir> gReservoirs;
     const size_t reservoirsStart = pixelLinearIndex * nbReservoirPerPixel;
 
     RestirReservoir r = gReservoirs[reservoirsStart + reservoirIdx];
-    r.mY.mIncomingRadiance = gNRDOutput[pixel];
+    r.mY.mIncomingRadiance = gNRDOutput[pixel].xyz;
 
     gReservoirs[reservoirsStart + reservoirIdx] = r;
 }

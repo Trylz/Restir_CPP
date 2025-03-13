@@ -1,5 +1,8 @@
 #include "NRDEncoding.slangh"
 #include "NRD.slangh"
+#include "Reservoir.slangh"
+
+import Utils.Sampling.TinyUniformSampleGenerator;
 
 cbuffer PerFrameCB
 {
