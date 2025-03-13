@@ -73,7 +73,7 @@ int2 getPreviousFramePixelPos(float4 P, float width, float height)
     if (abs(currlinearDepth - prevlinearDepth) > temporalLinearDepthThreshold)
         return;
 
-    const float3 V = normalize(currP - cameraPositionWs);
+    const float3 V = normalize(cameraPositionWs - currP);
     const float3 diffuse = gAlbedo[pixel].xyz;
     const float3 specular = gSpecular[pixel].xyz;
     const float roughness = gSpecular[pixel].w;

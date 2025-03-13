@@ -78,7 +78,7 @@ RestirReservoir RIS(uint2 pixel)
 
     const float3 P = gPositionWs[pixel].xyz;
     const float3 N = gNormalWs[pixel].xyz;
-    const float3 V = normalize(P - cameraPositionWs);
+    const float3 V = normalize(cameraPositionWs - P);
     const float3 diffuse = gAlbedo[pixel].xyz;
     const float3 specular = gSpecular[pixel].xyz;
     const float roughness = gSpecular[pixel].w;
@@ -89,7 +89,7 @@ RestirReservoir RIS(uint2 pixel)
         const float rand = sampleNext1D(rng);
 
         uint lightIndex = (uint)(rand * (float)lightCount);
-        lightIndex = min(lightIndex,lightCount - 1u);
+        lightIndex = min(lightIndex, lightCount - 1u);
 
         // Read the light
         const RestirLight light = gLights[lightIndex];
