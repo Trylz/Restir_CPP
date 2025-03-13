@@ -200,7 +200,7 @@ void RestirApp::loadScene(const Fbo* pTargetFbo, RenderContext* pRenderContext)
 
 #if USE_DENOISING
 #if DENOISING_NRD
-    mpDenoisingPass = new Restir::NRDDenoiserPass(getDevice(), pRenderContext, mpScene, pTargetFbo->getWidth(), pTargetFbo->getHeight());
+    mpDenoisingPass = new Restir::NRDDenoiserPass(getDevice(), mpScene, pTargetFbo->getWidth(), pTargetFbo->getHeight());
 #else
     mpDenoisingPass = new Restir::OptixDenoiserPass(
         getDevice(), mpScene, pRenderContext, mpShadingPass->getOuputTexture(), pTargetFbo->getWidth(), pTargetFbo->getHeight()

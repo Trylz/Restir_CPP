@@ -17,13 +17,7 @@ namespace Restir
 {
 using namespace Falcor;
 
-NRDPass::NRDPass(
-    Falcor::ref<Falcor::Device> pDevice,
-    Falcor::RenderContext* pRenderContext,
-    Falcor::ref<Falcor::Scene> pScene,
-    uint32_t width,
-    uint32_t height
-)
+NRDPass::NRDPass(Falcor::ref<Falcor::Device> pDevice, Falcor::ref<Falcor::Scene> pScene, uint32_t width, uint32_t height)
     : mpDevice(pDevice), mpScene(pScene), mWidth(width), mHeight(height)
 {
     mpDevice->requireD3D12();
@@ -616,15 +610,9 @@ void NRDPass::dispatch(RenderContext* pRenderContext, const nrd::DispatchDesc& d
     mpDevice->getUploadHeap()->release(cbAllocation);
 }
 
-NRDDenoiserPass::NRDDenoiserPass(
-    Falcor::ref<Falcor::Device> pDevice,
-    Falcor::RenderContext* pRenderContext,
-    Falcor::ref<Falcor::Scene> pScene,
-    uint32_t width,
-    uint32_t height
-)
+NRDDenoiserPass::NRDDenoiserPass(Falcor::ref<Falcor::Device> pDevice, Falcor::ref<Falcor::Scene> pScene, uint32_t width, uint32_t height)
 {
-    mNRDPass = new NRDPass(pDevice, pRenderContext, pScene, width, height);
+    mNRDPass = new NRDPass(pDevice, pScene, width, height);
 }
 
 NRDDenoiserPass::~NRDDenoiserPass()

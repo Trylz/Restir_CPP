@@ -18,13 +18,7 @@ using namespace Falcor;
 class NRDPass
 {
 public:
-    NRDPass(
-        Falcor::ref<Falcor::Device> pDevice,
-        Falcor::RenderContext* pRenderContext,
-        Falcor::ref<Falcor::Scene> pScene,
-        uint32_t width,
-        uint32_t height
-    );
+    NRDPass(Falcor::ref<Falcor::Device> pDevice, Falcor::ref<Falcor::Scene> pScene, uint32_t width, uint32_t height);
     ~NRDPass();
 
     void render(Falcor::RenderContext* pRenderContext, uint32_t ReservoirIdx);
@@ -85,13 +79,7 @@ private:
 class NRDDenoiserPass
 {
 public:
-    NRDDenoiserPass(
-        Falcor::ref<Falcor::Device> pDevice,
-        Falcor::RenderContext* pRenderContext,
-        Falcor::ref<Falcor::Scene> pScene,
-        uint32_t width,
-        uint32_t height
-    );
+    NRDDenoiserPass(Falcor::ref<Falcor::Device> pDevice, Falcor::ref<Falcor::Scene> pScene, uint32_t width, uint32_t height);
     ~NRDDenoiserPass();
 
     void render(Falcor::RenderContext* pRenderContext);
