@@ -49,8 +49,8 @@ private:
     Falcor::ref<Falcor::Texture> mCurrentNormalWsTexture;
     Falcor::ref<Falcor::Texture> mPreviousNormalWsTexture;
 
-    ref<RasterPass> mpRasterPass;
-    ref<Fbo> mpFbo;
+    Falcor::ref<Falcor::RasterPass> mpRasterPass;
+    Falcor::ref<Falcor::Fbo> mpFbo;
 
     uint32_t mSampleIndex = 0u;
 };

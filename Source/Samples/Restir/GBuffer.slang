@@ -18,6 +18,11 @@ GBufferPSOut psMain(VSOut vsOut, uint triangleIndex : SV_PrimitiveID) : SV_TARGE
 {
     GBufferPSOut psOut = {};
 
+    float3 faceNormal = gScene.getFaceNormalW(vsOut.instanceID, triangleIndex);
+    VertexData v = prepareVertexData(vsOut, faceNormal);
+    let lod = ImplicitLodTextureSampler();
+
+    const float3 viewDir = normalize(gScene.camera.getPosition() - v.posW);
     const ShadingData sd = prepareShadingData(vsOut, triangleIndex, viewDir);
 
     let mi = gScene.materials.getMaterialInstance(sd, lod);
@@ -25,13 +30,12 @@ GBufferPSOut psMain(VSOut vsOut, uint triangleIndex : SV_PrimitiveID) : SV_TARGE
 
     // Write the ws position.
     {
-        psOut.posW = float4(sd.posW, 1.f);
+        psOut.positionWs = float4(sd.posW, 1.f);
     }
 
     // Write the ws normal.
     {
-        const float3 viewDir = gScene.camera.getPosition() - sd.posW;
-        psOut.normalWs = float4(sd.faceN, length(viewDir));
+        psOut.normalWs = float4(sd.faceN, length(gScene.camera.getPosition() - sd.posW));
     }
 
     // Write the albedo.

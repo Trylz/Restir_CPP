@@ -68,9 +68,9 @@ void GBuffer::render(RenderContext* pRenderContext)
     FALCOR_PROFILE(pRenderContext, "GBuffer::render");
 
     mpFbo->attachColorTarget(mCurrentPositionWsTexture, 0u);
-    mpFbo->attachColorTarget(mCurrentNormalWsTexture, 0u);
-    mpFbo->attachColorTarget(mAlbedoTexture, 0u);
-    mpFbo->attachColorTarget(mSpecularTexture, 0u);
+    mpFbo->attachColorTarget(mCurrentNormalWsTexture, 1u);
+    mpFbo->attachColorTarget(mAlbedoTexture, 2u);
+    mpFbo->attachColorTarget(mSpecularTexture, 3u);
     mpFbo->attachDepthStencilTarget(mDepthTexture);
 
     pRenderContext->clearDsv(mDepthTexture->getDSV().get(), 1.f, 0);
