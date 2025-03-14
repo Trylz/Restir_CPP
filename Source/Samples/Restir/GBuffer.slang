@@ -1,87 +1,48 @@
-import Scene.Raytracing;
-import Utils.Sampling.TinyUniformSampleGenerator;
+import Scene.Raster;
 import Rendering.Lights.LightHelpers;
 
-RWTexture2D<float4> gPositionWs;
-RWTexture2D<float4> gNormalWs;
-RWTexture2D<float4> gAlbedo;
-RWTexture2D<float4> gSpecular;
-
-cbuffer PerFrameCB
+VSOut vsMain(VSIn vIn)
 {
-    float2 viewportDims;
-    uint sampleIndex;
-};
-
-struct PrimaryRayData
-{
-    bool dummy;
-};
-
-[shader("miss")]
-void primaryMiss(inout PrimaryRayData hitData)
-{
-    uint2 launchIndex = DispatchRaysIndex().xy;
-    gPositionWs[launchIndex].w = 0.0f;
+    return defaultVS(vIn);
 }
 
-[shader("closesthit")]
-void primaryClosestHit(inout PrimaryRayData hitData, BuiltInTriangleIntersectionAttributes attribs)
+struct GBufferPSOut
 {
-    // Get the hit-point data.
-    float3 rayDirW = WorldRayDirection();
-    float hitT = RayTCurrent();
-    uint triangleIndex = PrimitiveIndex();
+    float4 positionWs : SV_TARGET0;
+    float4 normalWs : SV_TARGET1;
+    float4 albedo : SV_TARGET2;
+    float4 specular : SV_TARGET3;
+};
 
-    // Prepare the shading data.
-    const GeometryInstanceID instanceID = getGeometryInstanceID();
-    VertexData v = getVertexData(instanceID, triangleIndex, attribs);
-    uint materialID = gScene.getMaterialID(instanceID);
-    ShadingData sd = gScene.materials.prepareShadingData(v, materialID, -rayDirW);
+GBufferPSOut psMain(VSOut vsOut, uint triangleIndex : SV_PrimitiveID) : SV_TARGET
+{
+    GBufferPSOut psOut = {};
 
-    // Create material instance and query its properties.
-    let lod = ExplicitLodTextureSampler(0.f);
+    const ShadingData sd = prepareShadingData(vsOut, triangleIndex, viewDir);
+
     let mi = gScene.materials.getMaterialInstance(sd, lod);
     let bsdfProperties = mi.getProperties(sd);
 
-    // The launch index.
-    const uint2 launchIndex = DispatchRaysIndex().xy;
-
     // Write the ws position.
     {
-        gPositionWs[launchIndex] = float4(sd.posW, 1.f);
+        psOut.posW = float4(sd.posW, 1.f);
     }
+
     // Write the ws normal.
     {
-        gNormalWs[launchIndex] = float4(sd.faceN, hitT);
+        const float3 viewDir = gScene.camera.getPosition() - sd.posW;
+        psOut.normalWs = float4(sd.faceN, length(viewDir));
     }
 
     // Write the albedo.
     {
-        gAlbedo[launchIndex] = float4(bsdfProperties.diffuseReflectionAlbedo, materialID);
+        psOut.albedo = float4(bsdfProperties.diffuseReflectionAlbedo, vsOut.materialID);
     }
 
     // Write the specular.
     {
-        gSpecular[launchIndex] = float4(bsdfProperties.specularReflectionAlbedo, bsdfProperties.roughness);
+        psOut.specular = float4(bsdfProperties.specularReflectionAlbedo, bsdfProperties.roughness);
     }
+
+    return psOut;
 }
-
-[shader("anyhit")]
-void primaryAnyHit(inout PrimaryRayData rayData, BuiltInTriangleIntersectionAttributes attribs)
-{
-}
-
-[shader("raygeneration")]
-void rayGen()
-{
-    uint3 launchIndex = DispatchRaysIndex();
-    if (any(launchIndex.xy > (uint2)viewportDims))
-        return;
-
-    const RayDesc ray = gScene.camera.computeRayPinhole(launchIndex.xy, viewportDims).toRayDesc();
-
-    PrimaryRayData hitData;
-    TraceRay(gScene.rtAccel, 0 /*rayFlags*/, 0xFF, 0 /* ray index*/, rayTypeCount, 0, ray, hitData);
-}
-
