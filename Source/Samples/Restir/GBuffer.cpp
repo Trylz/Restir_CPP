@@ -110,8 +110,10 @@ void GBuffer::render(RenderContext* pRenderContext)
     mpFbo->attachDepthStencilTarget(mDepthTexture);
 
     pRenderContext->clearDsv(mDepthTexture->getDSV().get(), 1.f, 0);
-    mpRasterPass->getState()->setFbo(mpFbo);
 
+    pRenderContext->clearFbo(mpFbo.get(), float4(0), 1.f, 0, FboAttachmentType::Color);
+
+    mpRasterPass->getState()->setFbo(mpFbo);
     mpScene->rasterize(pRenderContext, mpRasterPass->getState().get(), mpRasterPass->getVars().get());
 }
 
