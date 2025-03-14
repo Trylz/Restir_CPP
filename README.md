@@ -48,7 +48,7 @@ To switch scene simply change the **SCENE_NAME** define  inside RestirApp.cpp fi
 2: Sponza scene.  
 
 # Code overview
-Restir source code is located here  
+Restir specific source code is located here  
 https://github.com/Trylz/Restir_CPP/tree/main/Source/Samples/Restir
 
 ## Application entry point
