@@ -18,9 +18,9 @@ GBufferPSOut psMain(VSOut vsOut, uint triangleIndex : SV_PrimitiveID) : SV_TARGE
 {
     GBufferPSOut psOut = {};
 
-    float3 faceNormal = gScene.getFaceNormalW(vsOut.instanceID, triangleIndex);
-    VertexData v = prepareVertexData(vsOut, faceNormal);
-    let lod = ImplicitLodTextureSampler();
+    const float3 faceNormal = gScene.getFaceNormalW(vsOut.instanceID, triangleIndex);
+    const VertexData v = prepareVertexData(vsOut, faceNormal);
+    const let lod = ImplicitLodTextureSampler();
 
     const float3 viewDir = normalize(gScene.camera.getPosition() - v.posW);
     const ShadingData sd = prepareShadingData(vsOut, triangleIndex, viewDir);
@@ -33,17 +33,17 @@ GBufferPSOut psMain(VSOut vsOut, uint triangleIndex : SV_PrimitiveID) : SV_TARGE
         psOut.positionWs = float4(sd.posW, 1.f);
     }
 
-    // Write the ws normal.
+    // Write the ws normal and hit distance.
     {
         psOut.normalWs = float4(sd.faceN, length(gScene.camera.getPosition() - sd.posW));
     }
 
-    // Write the albedo.
+    // Write the albedo and material id.
     {
         psOut.albedo = float4(bsdfProperties.diffuseReflectionAlbedo, vsOut.materialID);
     }
 
-    // Write the specular.
+    // Write the specular and roughness.
     {
         psOut.specular = float4(bsdfProperties.specularReflectionAlbedo, bsdfProperties.roughness);
     }
