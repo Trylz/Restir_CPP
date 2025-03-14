@@ -14,7 +14,7 @@ void GBuffer::init(ref<Device> pDevice, ref<Scene> pScene, uint32_t width, uint3
     mHeight = height;
 
     createTextures();
-    compilePrograms();
+    compileProgram();
 }
 
 void GBuffer::createTextures()
@@ -42,49 +42,41 @@ void GBuffer::createTextures()
     mSpecularTexture = mpDevice->createTexture2D(
         mWidth, mHeight, ResourceFormat::RGBA32Float, 1, 1, nullptr, ResourceBindFlags::ShaderResource | ResourceBindFlags::UnorderedAccess
     );
+
+    mDepthTexture = mpDevice->createTexture2D(
+        mWidth, mHeight, ResourceFormat::D32Float, 1, 1, nullptr, ResourceBindFlags::DepthStencil
+    );
 }
 
-void GBuffer::compilePrograms()
+void GBuffer::compileProgram()
 {
     auto shaderModules = mpScene->getShaderModules();
     auto typeConformances = mpScene->getTypeConformances();
-
     auto defines = mpScene->getSceneDefines();
 
-    ProgramDesc rtProgDesc;
-    rtProgDesc.addShaderModules(shaderModules);
-    rtProgDesc.addShaderLibrary("Samples/Restir/GBuffer.slang");
-    rtProgDesc.addTypeConformances(typeConformances);
-    rtProgDesc.setMaxTraceRecursionDepth(1);
+    ProgramDesc rasterProgDesc;
+    rasterProgDesc.addShaderModules(shaderModules);
+    rasterProgDesc.addShaderLibrary("Samples/Restir/GBuffer.slang").vsEntry("vsMain").psEntry("psMain");
+    rasterProgDesc.addTypeConformances(typeConformances);
 
-    rtProgDesc.setMaxPayloadSize(24);
-
-    ref<RtBindingTable> sbt = RtBindingTable::create(1, 1, mpScene->getGeometryCount());
-    sbt->setRayGen(rtProgDesc.addRayGen("rayGen"));
-    sbt->setMiss(0, rtProgDesc.addMiss("primaryMiss"));
-    auto primary = rtProgDesc.addHitGroup("primaryClosestHit", "primaryAnyHit");
-
-    sbt->setHitGroup(0, mpScene->getGeometryIDs(Scene::GeometryType::TriangleMesh), primary);
-
-    mpRaytraceProgram = Program::create(mpDevice, rtProgDesc, defines);
-    mpRtVars = RtProgramVars::create(mpDevice, mpRaytraceProgram, sbt);
+    mpRasterPass = RasterPass::create(mpDevice, rasterProgDesc, defines);
+    mpFbo = Fbo::create(mpDevice);
 }
 
 void GBuffer::render(RenderContext* pRenderContext)
 {
     FALCOR_PROFILE(pRenderContext, "GBuffer::render");
 
-    auto var = mpRtVars->getRootVar();
+    mpFbo->attachColorTarget(mCurrentPositionWsTexture, 0u);
+    mpFbo->attachColorTarget(mCurrentNormalWsTexture, 0u);
+    mpFbo->attachColorTarget(mAlbedoTexture, 0u);
+    mpFbo->attachColorTarget(mSpecularTexture, 0u);
+    mpFbo->attachDepthStencilTarget(mDepthTexture);
 
-    var["PerFrameCB"]["viewportDims"] = float2(mWidth, mHeight);
-    var["PerFrameCB"]["sampleIndex"] = mSampleIndex++;
+    pRenderContext->clearDsv(mDepthTexture->getDSV().get(), 1.f, 0);
+    mpRasterPass->getState()->setFbo(mpFbo);
 
-    var["gPositionWs"] = mCurrentPositionWsTexture;
-    var["gNormalWs"] = mCurrentNormalWsTexture;
-    var["gAlbedo"] = mAlbedoTexture;
-    var["gSpecular"] = mSpecularTexture;
-
-    mpScene->raytrace(pRenderContext, mpRaytraceProgram.get(), mpRtVars, uint3(mWidth, mHeight, 1));
+    mpScene->rasterize(pRenderContext, mpRasterPass->getState().get(), mpRasterPass->getVars().get());
 }
 
 } // namespace Restir
