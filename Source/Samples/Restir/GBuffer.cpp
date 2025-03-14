@@ -20,27 +20,63 @@ void GBuffer::init(ref<Device> pDevice, ref<Scene> pScene, uint32_t width, uint3
 void GBuffer::createTextures()
 {
     mCurrentPositionWsTexture = mpDevice->createTexture2D(
-        mWidth, mHeight, ResourceFormat::RGBA32Float, 1, 1, nullptr, ResourceBindFlags::ShaderResource | ResourceBindFlags::UnorderedAccess
+        mWidth,
+        mHeight,
+        ResourceFormat::RGBA32Float,
+        1,
+        1,
+        nullptr,
+        ResourceBindFlags::RenderTarget | ResourceBindFlags::ShaderResource | ResourceBindFlags::UnorderedAccess
     );
 
     mPreviousPositionWsTexture = mpDevice->createTexture2D(
-        mWidth, mHeight, ResourceFormat::RGBA32Float, 1, 1, nullptr, ResourceBindFlags::ShaderResource | ResourceBindFlags::UnorderedAccess
+        mWidth,
+        mHeight,
+        ResourceFormat::RGBA32Float,
+        1,
+        1,
+        nullptr,
+        ResourceBindFlags::RenderTarget | ResourceBindFlags::ShaderResource | ResourceBindFlags::UnorderedAccess
     );
 
     mCurrentNormalWsTexture = mpDevice->createTexture2D(
-        mWidth, mHeight, ResourceFormat::RGBA32Float, 1, 1, nullptr, ResourceBindFlags::ShaderResource | ResourceBindFlags::UnorderedAccess
+        mWidth,
+        mHeight,
+        ResourceFormat::RGBA32Float,
+        1,
+        1,
+        nullptr,
+        ResourceBindFlags::RenderTarget | ResourceBindFlags::ShaderResource | ResourceBindFlags::UnorderedAccess
     );
 
     mPreviousNormalWsTexture = mpDevice->createTexture2D(
-        mWidth, mHeight, ResourceFormat::RGBA32Float, 1, 1, nullptr, ResourceBindFlags::ShaderResource | ResourceBindFlags::UnorderedAccess
+        mWidth,
+        mHeight,
+        ResourceFormat::RGBA32Float,
+        1,
+        1,
+        nullptr,
+        ResourceBindFlags::RenderTarget | ResourceBindFlags::ShaderResource | ResourceBindFlags::UnorderedAccess
     );
 
     mAlbedoTexture = mpDevice->createTexture2D(
-        mWidth, mHeight, ResourceFormat::RGBA32Float, 1, 1, nullptr, ResourceBindFlags::ShaderResource | ResourceBindFlags::UnorderedAccess
+        mWidth,
+        mHeight,
+        ResourceFormat::RGBA32Float,
+        1,
+        1,
+        nullptr,
+        ResourceBindFlags::RenderTarget | ResourceBindFlags::ShaderResource | ResourceBindFlags::UnorderedAccess
     );
 
     mSpecularTexture = mpDevice->createTexture2D(
-        mWidth, mHeight, ResourceFormat::RGBA32Float, 1, 1, nullptr, ResourceBindFlags::ShaderResource | ResourceBindFlags::UnorderedAccess
+        mWidth,
+        mHeight,
+        ResourceFormat::RGBA32Float,
+        1,
+        1,
+        nullptr,
+        ResourceBindFlags::RenderTarget | ResourceBindFlags::ShaderResource | ResourceBindFlags::UnorderedAccess
     );
 
     mDepthTexture = mpDevice->createTexture2D(
