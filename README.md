@@ -5,7 +5,7 @@ This repository host a C++ implementation of the Restir algorithm inside Falcor 
 ![Sponza](https://github.com/user-attachments/assets/50a1e7c9-740c-4fc6-beca-661914f04734)
 ![SanMiguel](https://github.com/user-attachments/assets/5ab85fc4-21f6-44da-8055-89aa15c96030)
 
-Video showcase: https://youtu.be/E4Vb9qp4OP4
+Video showcase: https://www.youtube.com/watch?v=pyQrblYP_VY
 
 Source code: https://github.com/Trylz/Restir_CPP/tree/main/Source/Samples/Restir
 
