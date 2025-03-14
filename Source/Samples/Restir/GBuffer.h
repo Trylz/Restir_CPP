@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Singleton.h"
+#include "Core/Pass/RasterPass.h"
 
 namespace Restir
 {
@@ -30,7 +31,7 @@ public:
 
 private:
     void createTextures();
-    void compilePrograms();
+    void compileProgram();
 
     Falcor::ref<Falcor::Device> mpDevice;
     Falcor::ref<Falcor::Scene> mpScene;
@@ -43,12 +44,13 @@ private:
 
     Falcor::ref<Falcor::Texture> mAlbedoTexture;
     Falcor::ref<Falcor::Texture> mSpecularTexture;
+    Falcor::ref<Falcor::Texture> mDepthTexture;
 
     Falcor::ref<Falcor::Texture> mCurrentNormalWsTexture;
     Falcor::ref<Falcor::Texture> mPreviousNormalWsTexture;
 
-    Falcor::ref<Falcor::Program> mpRaytraceProgram;
-    Falcor::ref<Falcor::RtProgramVars> mpRtVars;
+    Falcor::ref<Falcor::RasterPass> mpRasterPass;
+    Falcor::ref<Falcor::Fbo> mpFbo;
 
     uint32_t mSampleIndex = 0u;
 };
